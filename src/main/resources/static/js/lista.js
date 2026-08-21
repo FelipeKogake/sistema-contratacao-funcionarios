@@ -1,6 +1,5 @@
-let candidatos = [];
-let idEmEdicao = null;
 let idParaExcluir = null;
+let proximoIdExemplo = 4; // id fictício pros próximos cadastros, até a API estar conectada de verdade
 
 const STATUS_LABEL = {
     EM_ANALISE: 'Em análise',
@@ -10,84 +9,46 @@ const STATUS_LABEL = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    carregarCandidatos();
-
     document.getElementById('btnNovoCandidato').addEventListener('click', abrirModalCriacao);
     document.getElementById('formCandidato').addEventListener('submit', salvarCandidato);
     document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
 
-    document.getElementById('filtroNome').addEventListener('input', renderizarTabela);
-    document.getElementById('filtroCargo').addEventListener('input', renderizarTabela);
-    document.getElementById('filtroStatus').addEventListener('change', renderizarTabela);
+    document.getElementById('filtroNome').addEventListener('input', filtrarTabela);
+    document.getElementById('filtroCargo').addEventListener('input', filtrarTabela);
+    document.getElementById('filtroStatus').addEventListener('change', filtrarTabela);
+
+    // As 3 linhas de exemplo já vêm prontas no HTML — só liga os botões delas.
+    ativarBotoesDaLinha(document);
 });
 
-async function carregarCandidatos() {
-    // TODO: quando listarFuncionarios() estiver implementada em api.js, troque a linha abaixo por:
-    // candidatos = await listarFuncionarios();
-    candidatos = CANDIDATOS_EXEMPLO;
-    renderizarTabela();
+function ativarBotoesDaLinha(escopo) {
+    escopo.querySelectorAll('.status-select').forEach(select =>
+        select.addEventListener('change', mudarStatus));
+    escopo.querySelectorAll('.btn-editar').forEach(btn =>
+        btn.addEventListener('click', () => abrirModalEdicao(btn.dataset.id)));
+    escopo.querySelectorAll('.btn-excluir').forEach(btn =>
+        btn.addEventListener('click', () => abrirModalExclusao(btn.dataset.id, btn.dataset.nome)));
 }
 
-function renderizarTabela() {
+function filtrarTabela() {
     const nomeFiltro = document.getElementById('filtroNome').value.toLowerCase();
     const cargoFiltro = document.getElementById('filtroCargo').value.toLowerCase();
     const statusFiltro = document.getElementById('filtroStatus').value;
 
-    const filtrados = candidatos.filter(c =>
-        (c.nome || '').toLowerCase().includes(nomeFiltro) &&
-        (c.cargo || '').toLowerCase().includes(cargoFiltro) &&
-        (statusFiltro === '' || c.status === statusFiltro)
-    );
+    const linhas = document.querySelectorAll('#corpoTabela tr');
+    let algumaVisivel = false;
 
-    const corpo = document.getElementById('corpoTabela');
-    const estadoVazio = document.getElementById('estadoVazio');
-    corpo.innerHTML = '';
-
-    if (filtrados.length === 0) {
-        estadoVazio.classList.remove('d-none');
-        return;
-    }
-    estadoVazio.classList.add('d-none');
-
-    filtrados.forEach(c => {
-        const salario = c.salario != null
-            ? Number(c.salario).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-            : '-';
-
-        const linha = document.createElement('tr');
-        linha.innerHTML = `
-            <td>
-                <div class="fw-semibold">${escapeHtml(c.nome)}</div>
-                <div class="text-muted small">${escapeHtml(c.email || '')}</div>
-            </td>
-            <td>${escapeHtml(c.cargo || '-')}</td>
-            <td>${escapeHtml(c.departamento || '-')}</td>
-            <td>${escapeHtml(c.cidade || '-')}</td>
-            <td>${salario}</td>
-            <td>
-                <select class="form-select form-select-sm status-select status-${c.status}" data-id="${c.id}">
-                    ${Object.entries(STATUS_LABEL).map(([valor, label]) =>
-                        `<option value="${valor}" ${valor === c.status ? 'selected' : ''}>${label}</option>`
-                    ).join('')}
-                </select>
-            </td>
-            <td class="text-end">
-                <button class="btn btn-sm btn-icon btn-editar" data-id="${c.id}" title="Editar">
-                    <i class="bi bi-pencil-fill"></i>
-                </button>
-                <button class="btn btn-sm btn-icon btn-excluir" data-id="${c.id}" data-nome="${escapeHtml(c.nome)}" title="Excluir">
-                    <i class="bi bi-trash3-fill"></i>
-                </button>
-            </td>
-        `;
-        corpo.appendChild(linha);
+    linhas.forEach(linha => {
+        const nome = (linha.dataset.nome || '').toLowerCase();
+        const cargo = (linha.dataset.cargo || '').toLowerCase();
+        const status = linha.querySelector('.status-select').value;
+        const combina = nome.includes(nomeFiltro) && cargo.includes(cargoFiltro) &&
+            (statusFiltro === '' || status === statusFiltro);
+        linha.style.display = combina ? '' : 'none';
+        if (combina) algumaVisivel = true;
     });
 
-    document.querySelectorAll('.status-select').forEach(select => select.addEventListener('change', mudarStatus));
-    document.querySelectorAll('.btn-editar').forEach(btn =>
-        btn.addEventListener('click', () => abrirModalEdicao(Number(btn.dataset.id))));
-    document.querySelectorAll('.btn-excluir').forEach(btn =>
-        btn.addEventListener('click', () => abrirModalExclusao(Number(btn.dataset.id), btn.dataset.nome)));
+    document.getElementById('estadoVazio').classList.toggle('d-none', algumaVisivel);
 }
 
 function escapeHtml(texto) {
@@ -96,13 +57,17 @@ function escapeHtml(texto) {
     return div.innerHTML;
 }
 
+function formatarSalario(valor) {
+    return valor !== null && valor !== undefined && valor !== ''
+        ? Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+        : '-';
+}
+
 async function mudarStatus(evento) {
-    const id = Number(evento.target.dataset.id);
+    const id = evento.target.dataset.id;
     const novoStatus = evento.target.value;
     try {
         await atualizarParcial(id, { status: novoStatus });
-        const candidato = candidatos.find(c => c.id === id);
-        if (candidato) candidato.status = novoStatus;
         evento.target.className = `form-select form-select-sm status-select status-${novoStatus}`;
     } catch (erro) {
         alert('Não foi possível atualizar o status: ' + erro.message);
@@ -110,7 +75,6 @@ async function mudarStatus(evento) {
 }
 
 function abrirModalCriacao() {
-    idEmEdicao = null;
     document.getElementById('formCandidato').reset();
     document.getElementById('candidatoId').value = '';
     document.getElementById('modalFormTitulo').innerHTML =
@@ -119,28 +83,69 @@ function abrirModalCriacao() {
 }
 
 function abrirModalEdicao(id) {
-    const candidato = candidatos.find(c => c.id === id);
-    if (!candidato) return;
+    const linha = document.querySelector(`tr[data-id="${id}"]`);
+    if (!linha) return;
 
-    idEmEdicao = id;
     document.getElementById('candidatoId').value = id;
-    document.getElementById('campoNome').value = candidato.nome || '';
-    document.getElementById('campoEmail').value = candidato.email || '';
-    document.getElementById('campoTelefone').value = candidato.telefone || '';
-    document.getElementById('campoCargo').value = candidato.cargo || '';
-    document.getElementById('campoDepartamento').value = candidato.departamento || '';
-    document.getElementById('campoCidade').value = candidato.cidade || '';
-    document.getElementById('campoSalario').value = candidato.salario ?? '';
-    document.getElementById('campoStatus').value = candidato.status || 'EM_ANALISE';
+    document.getElementById('campoNome').value = linha.dataset.nome;
+    document.getElementById('campoEmail').value = linha.dataset.email;
+    document.getElementById('campoTelefone').value = linha.dataset.telefone;
+    document.getElementById('campoCargo').value = linha.dataset.cargo;
+    document.getElementById('campoDepartamento').value = linha.dataset.departamento;
+    document.getElementById('campoCidade').value = linha.dataset.cidade;
+    document.getElementById('campoSalario').value = linha.dataset.salario;
+    document.getElementById('campoStatus').value = linha.querySelector('.status-select').value;
     document.getElementById('modalFormTitulo').innerHTML =
         '<i class="bi bi-pencil-fill me-2"></i>Editar Candidato';
 
     new bootstrap.Modal(document.getElementById('modalForm')).show();
 }
 
+function montarConteudoLinha(id, dados) {
+    return `
+        <td>
+            <div class="fw-semibold">${escapeHtml(dados.nome)}</div>
+            <div class="text-muted small">${escapeHtml(dados.email || '')}</div>
+        </td>
+        <td>${escapeHtml(dados.cargo || '-')}</td>
+        <td>${escapeHtml(dados.departamento || '-')}</td>
+        <td>${escapeHtml(dados.cidade || '-')}</td>
+        <td>${formatarSalario(dados.salario)}</td>
+        <td>
+            <select class="form-select form-select-sm status-select status-${dados.status}" data-id="${id}">
+                ${Object.entries(STATUS_LABEL).map(([valor, label]) =>
+                    `<option value="${valor}" ${valor === dados.status ? 'selected' : ''}>${label}</option>`
+                ).join('')}
+            </select>
+        </td>
+        <td class="text-end">
+            <button class="btn btn-sm btn-icon btn-editar" data-id="${id}" title="Editar">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-icon btn-excluir" data-id="${id}" data-nome="${escapeHtml(dados.nome)}" title="Excluir">
+                <i class="bi bi-trash3-fill"></i>
+            </button>
+        </td>
+    `;
+}
+
+function preencherDadosNaLinha(linha, id, dados) {
+    linha.dataset.id = id;
+    linha.dataset.nome = dados.nome;
+    linha.dataset.email = dados.email || '';
+    linha.dataset.telefone = dados.telefone || '';
+    linha.dataset.cargo = dados.cargo || '';
+    linha.dataset.departamento = dados.departamento || '';
+    linha.dataset.cidade = dados.cidade || '';
+    linha.dataset.salario = dados.salario ?? '';
+    linha.innerHTML = montarConteudoLinha(id, dados);
+    ativarBotoesDaLinha(linha);
+}
+
 async function salvarCandidato(evento) {
     evento.preventDefault();
 
+    const idExistente = document.getElementById('candidatoId').value;
     const dados = {
         nome: document.getElementById('campoNome').value,
         email: document.getElementById('campoEmail').value,
@@ -158,13 +163,19 @@ async function salvarCandidato(evento) {
     botao.disabled = true;
 
     try {
-        if (idEmEdicao) {
-            await atualizarFuncionario(idEmEdicao, dados);
+        if (idExistente) {
+            await atualizarFuncionario(idExistente, dados);
+            const linha = document.querySelector(`tr[data-id="${idExistente}"]`);
+            if (linha) preencherDadosNaLinha(linha, idExistente, dados);
         } else {
+            const novoId = proximoIdExemplo++;
             await criarFuncionario(dados);
+            const linha = document.createElement('tr');
+            preencherDadosNaLinha(linha, novoId, dados);
+            document.getElementById('corpoTabela').appendChild(linha);
+            document.getElementById('estadoVazio').classList.add('d-none');
         }
         bootstrap.Modal.getInstance(document.getElementById('modalForm')).hide();
-        await carregarCandidatos();
     } catch (erro) {
         alert('Erro ao salvar candidato: ' + erro.message);
     } finally {
@@ -182,8 +193,11 @@ async function confirmarExclusao() {
     if (!idParaExcluir) return;
     try {
         await excluirFuncionario(idParaExcluir);
+        document.querySelector(`tr[data-id="${idParaExcluir}"]`)?.remove();
+        if (document.querySelectorAll('#corpoTabela tr').length === 0) {
+            document.getElementById('estadoVazio').classList.remove('d-none');
+        }
         bootstrap.Modal.getInstance(document.getElementById('modalDelete')).hide();
-        await carregarCandidatos();
     } catch (erro) {
         alert('Erro ao excluir candidato: ' + erro.message);
     }

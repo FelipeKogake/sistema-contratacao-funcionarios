@@ -82,7 +82,89 @@
                     <th class="text-end">Ações</th>
                 </tr>
                 </thead>
-                <tbody id="corpoTabela"></tbody>
+                <tbody id="corpoTabela">
+                <tr data-id="1" data-nome="João Silva" data-email="joao@email.com" data-telefone="11999990000"
+                    data-cargo="Desenvolvedor" data-departamento="TI" data-cidade="São Paulo" data-salario="5000">
+                    <td>
+                        <div class="fw-semibold">João Silva</div>
+                        <div class="text-muted small">joao@email.com</div>
+                    </td>
+                    <td>Desenvolvedor</td>
+                    <td>TI</td>
+                    <td>São Paulo</td>
+                    <td>R$ 5.000,00</td>
+                    <td>
+                        <select class="form-select form-select-sm status-select status-APROVADO" data-id="1">
+                            <option value="EM_ANALISE">Em análise</option>
+                            <option value="APROVADO" selected>Aprovado</option>
+                            <option value="REPROVADO">Reprovado</option>
+                            <option value="CONTRATADO">Contratado</option>
+                        </select>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-icon btn-editar" data-id="1" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-icon btn-excluir" data-id="1" data-nome="João Silva" title="Excluir">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr data-id="2" data-nome="Maria Souza" data-email="maria@email.com" data-telefone="11988887777"
+                    data-cargo="Analista de RH" data-departamento="Recursos Humanos" data-cidade="Curitiba" data-salario="4200">
+                    <td>
+                        <div class="fw-semibold">Maria Souza</div>
+                        <div class="text-muted small">maria@email.com</div>
+                    </td>
+                    <td>Analista de RH</td>
+                    <td>Recursos Humanos</td>
+                    <td>Curitiba</td>
+                    <td>R$ 4.200,00</td>
+                    <td>
+                        <select class="form-select form-select-sm status-select status-EM_ANALISE" data-id="2">
+                            <option value="EM_ANALISE" selected>Em análise</option>
+                            <option value="APROVADO">Aprovado</option>
+                            <option value="REPROVADO">Reprovado</option>
+                            <option value="CONTRATADO">Contratado</option>
+                        </select>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-icon btn-editar" data-id="2" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-icon btn-excluir" data-id="2" data-nome="Maria Souza" title="Excluir">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr data-id="3" data-nome="Pedro Lima" data-email="pedro@email.com" data-telefone="11977776666"
+                    data-cargo="Designer" data-departamento="Produto" data-cidade="Belo Horizonte" data-salario="4800">
+                    <td>
+                        <div class="fw-semibold">Pedro Lima</div>
+                        <div class="text-muted small">pedro@email.com</div>
+                    </td>
+                    <td>Designer</td>
+                    <td>Produto</td>
+                    <td>Belo Horizonte</td>
+                    <td>R$ 4.800,00</td>
+                    <td>
+                        <select class="form-select form-select-sm status-select status-CONTRATADO" data-id="3">
+                            <option value="EM_ANALISE">Em análise</option>
+                            <option value="APROVADO">Aprovado</option>
+                            <option value="REPROVADO">Reprovado</option>
+                            <option value="CONTRATADO" selected>Contratado</option>
+                        </select>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-icon btn-editar" data-id="3" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-icon btn-excluir" data-id="3" data-nome="Pedro Lima" title="Excluir">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
             </table>
         </div>
         <div id="estadoVazio" class="text-center py-5 d-none">
@@ -179,7 +261,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/api.js"></script>
-<script src="/js/dados-exemplo.js"></script>
 <script src="/js/lista.js"></script>
 </body>
 </html>
