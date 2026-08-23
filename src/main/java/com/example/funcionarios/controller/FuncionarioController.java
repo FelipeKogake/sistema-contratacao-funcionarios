@@ -37,9 +37,7 @@ public class FuncionarioController {
 
     @GetMapping()
     public ResponseEntity<List<Funcionario>> getFuncionarios() {
-        List<Funcionario> result = funcionarioService.getFuncionarios();
-        if (result.isEmpty()) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok().body(result); 
+        return ResponseEntity.ok(funcionarioService.getFuncionarios());
     }
 
 
