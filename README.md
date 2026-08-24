@@ -101,3 +101,8 @@ Base: `/funcionarios`
 ```
 
 Campos `nome`, `email` e `cargo` são obrigatórios e validados (`@NotBlank`, `@Email`) nas operações de criação e atualização completa (POST/PUT).
+
+## Integrantes
+
+- [Felipe Kogake](https://github.com/FelipeKogake)
+- [Maria Eduarda Rosa](https://github.com/rosamaduda)
