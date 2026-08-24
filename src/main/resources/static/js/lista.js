@@ -8,7 +8,7 @@ const STATUS_LABEL = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnSalvarCandidato').addEventListener('click', salvarCandidato);
+    document.getElementById('btnSalvarCandidato').addEventListener('click', abrirModalCriacao);
     document.getElementById('formCandidato').addEventListener('submit', salvarCandidato);
     document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
 
@@ -71,6 +71,14 @@ async function mudarStatus(evento) {
     } catch (erro) {
         alert('Não foi possível atualizar o status: ' + erro.message);
     }
+}
+
+function abrirModalCriacao() {
+    document.getElementById('formCandidato').reset();
+    document.getElementById('candidatoId').value = '';
+    document.getElementById('modalFormTitulo').innerHTML =
+        '<i class="bi bi-person-plus-fill me-2"></i>Novo Candidato';
+    document.getElementById('campoStatus').value = 'EM_ANALISE';
 }
 
 function abrirModalEdicao(id) {
