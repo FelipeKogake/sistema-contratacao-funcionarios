@@ -7,8 +7,10 @@ const API_BASE = '/funcionarios';
  * retornando [] em vez de tentar fazer .json() de uma resposta vazia.
  */
 async function listarFuncionarios() {
-    throw new Error('listarFuncionarios() ainda não foi implementada — veja o TODO em api.js');
-}
+    return fetch(`${API_BASE}`).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível buscar os funcionários');
+      return resposta.json();
+});}
 
 /**
  * TODO: implementar.
@@ -16,7 +18,10 @@ async function listarFuncionarios() {
  * ou null se a resposta vier 404.
  */
 async function buscarFuncionario(id) {
-    throw new Error('buscarFuncionario() ainda não foi implementada — veja o TODO em api.js');
+  return fetch(`${API_BASE}/${id}`).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível buscar o funcionário');
+      return resposta.json();
+  });
 }
 
 /**
@@ -26,7 +31,14 @@ async function buscarFuncionario(id) {
  * e retornar o funcionário criado pelo back-end (já com o id gerado).
  */
 async function criarFuncionario(dados) {
-    throw new Error('criarFuncionario() ainda não foi implementada — veja o TODO em api.js');
+  return fetch(API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+  }).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível criar o funcionário');
+      return resposta.json();
+  });
 }
 
 /**
