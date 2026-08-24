@@ -12,9 +12,9 @@ import com.example.funcionarios.model.Status;
 @Repository
 public class FuncionarioRepository {
     private ArrayList<Funcionario> funcionarios = new ArrayList<>(List.of(
-        new Funcionario(1, "João", "j@j.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.APROVADO),
-        new Funcionario(2, "Maria", "m@m.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.REPROVADO),
-        new Funcionario(3, "Pedro", "p@p.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.EM_ANALISE)
+        new Funcionario(1, "João", "joao@gmail.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.APROVADO),
+        new Funcionario(2, "Maria", "maria@gmail.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.REPROVADO),
+        new Funcionario(3, "Pedro", "pedro@gmail.com", "123456789", "Desenvolvedor", "Desenvolvimento", 5000.00, "São Paulo", Status.EM_ANALISE)
     ));
     Integer proximoId = funcionarios.size() + 1;
 
