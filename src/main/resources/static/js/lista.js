@@ -8,7 +8,7 @@ const STATUS_LABEL = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnSalvarCandidato').addEventListener('click', abrirModalCriacao);
+    document.getElementById('btnNovoCandidato').addEventListener('click', abrirModalCriacao);
     document.getElementById('formCandidato').addEventListener('submit', salvarCandidato);
     document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
 
@@ -94,6 +94,8 @@ function abrirModalEdicao(id) {
     document.getElementById('campoCidade').value = linha.dataset.cidade;
     document.getElementById('campoSalario').value = linha.dataset.salario;
     document.getElementById('campoStatus').value = linha.querySelector('.status-select').value;
+    document.getElementById('modalFormTitulo').innerHTML =
+        '<i class="bi bi-pencil-fill me-2"></i>Editar Candidato';
 
     new bootstrap.Modal(document.getElementById('modalForm')).show();
 }
@@ -160,9 +162,17 @@ async function salvarCandidato(evento) {
     botao.disabled = true;
 
     try {
-        await atualizarFuncionario(id, dados);
-        const linha = document.querySelector(`tr[data-id="${id}"]`);
-        if (linha) preencherDadosNaLinha(linha, id, dados);
+        if (id) {
+            await atualizarFuncionario(id, dados);
+            const linha = document.querySelector(`tr[data-id="${id}"]`);
+            if (linha) preencherDadosNaLinha(linha, id, dados);
+        } else {
+            const funcionarioCriado = await criarFuncionario(dados);
+            const linha = document.createElement('tr');
+            preencherDadosNaLinha(linha, funcionarioCriado.id, funcionarioCriado);
+            document.getElementById('corpoTabela').appendChild(linha);
+            document.getElementById('estadoVazio').classList.add('d-none');
+        }
         bootstrap.Modal.getInstance(document.getElementById('modalForm')).hide();
     } catch (erro) {
         alert('Erro ao salvar candidato: ' + erro.message);

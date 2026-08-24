@@ -1,12 +1,17 @@
 :root {
-  --brand-50: #f5f3ff;
-  --brand-100: #ede9fe;
-  --brand-200: #ddd6fe;
-  --brand-400: #a78bfa;
+  --brand-50: #f6fff3;
+  --brand-100: #deede3;
+  --brand-200: #cef9ce;
+  /* --brand-400: #a78bfa;
   --brand-500: #8b5cf6;
   --brand-600: #7c3aed;
   --brand-700: #6d28d9;
-  --brand-900: #4c1d95;
+  --brand-900: #4c1d95; */
+  --brand-400: #83ed9f;
+  --brand-500: #56ce6a;
+  --brand-600: #1ab842;
+  --brand-700: #188825;
+  --brand-900: #116117;
 
   --text-primary: #1e1b2e;
   --text-muted: #6b6478;
@@ -174,20 +179,42 @@ h1, h2, h3, h4, h5, .navbar-brand, .page-title {
 .status-CONTRATADO { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
 
 /* Stat cards */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.25rem;
+}
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 1.5rem 1rem;
+  padding: 1.75rem 1.25rem;
   text-align: center;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
-.stat-icon { font-size: 1.5rem; color: var(--brand-500); margin-bottom: .5rem; }
-.stat-value { font-size: 2rem; font-weight: 700; }
-.stat-label { color: var(--text-muted); font-size: .85rem; }
-.stat-analise .stat-icon { color: var(--warning); }
-.stat-aprovado .stat-icon { color: var(--info); }
-.stat-reprovado .stat-icon { color: var(--danger); }
-.stat-contratado .stat-icon { color: var(--success); }
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(124, 58, 237, .1);
+}
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto .75rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background: var(--brand-100);
+  color: var(--brand-600);
+}
+.stat-value { font-size: 2.1rem; font-weight: 700; line-height: 1.2; }
+.stat-label { color: var(--text-muted); font-size: .85rem; margin-top: .25rem; }
+
+.stat-analise .stat-icon { background: #fef3c7; color: #92400e; }
+.stat-aprovado .stat-icon { background: #dbeafe; color: #1e40af; }
+.stat-reprovado .stat-icon { background: #fee2e2; color: #991b1b; }
+.stat-contratado .stat-icon { background: #d1fae5; color: #065f46; }
 
 /* Modal */
 .modal-content { border-radius: 16px; border: none; }
