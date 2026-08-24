@@ -1,5 +1,46 @@
 const API_BASE = '/funcionarios';
 
+/**
+ * TODO: implementar.
+ * Fazer um fetch GET em API_BASE e retornar a lista de funcionários (array).
+ * Dica: o back-end retorna 204 (sem corpo) quando a lista está vazia — trate esse caso
+ * retornando [] em vez de tentar fazer .json() de uma resposta vazia.
+ */
+async function listarFuncionarios() {
+    return fetch(`${API_BASE}`).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível buscar os funcionários');
+      return resposta.json();
+});}
+
+/**
+ * TODO: implementar.
+ * Fazer um fetch GET em `${API_BASE}/${id}` e retornar o funcionário encontrado,
+ * ou null se a resposta vier 404.
+ */
+async function buscarFuncionario(id) {
+  return fetch(`${API_BASE}/${id}`).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível buscar o funcionário');
+      return resposta.json();
+  });
+}
+
+/**
+ * TODO: implementar.
+ * Fazer um fetch POST em API_BASE, enviando `dados` como JSON no body
+ * (não esquece do header 'Content-Type': 'application/json'),
+ * e retornar o funcionário criado pelo back-end (já com o id gerado).
+ */
+async function criarFuncionario(dados) {
+  return fetch(API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+  }).then(resposta => {
+      if (!resposta.ok) throw new Error('Não foi possível criar o funcionário');
+      return resposta.json();
+  });
+}
+
 function atualizarFuncionario(id, dados) {
     return fetch(`${API_BASE}/${id}`, {
         method: 'PUT',

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,11 +94,13 @@
                     <td th:text="${c.cidade}"></td>
                     <td th:text="${c.salario}"></td>
                     <td>
-                        <select class="form-select form-select-sm status-select" th:attr="data-id=${c.id}">
-                            <option value="EM_ANALISE" th:selected="${c.status == 'EM_ANALISE'}">Em análise</option>
-                            <option value="APROVADO" th:selected="${c.status == 'APROVADO'}">Aprovado</option>
-                            <option value="REPROVADO" th:selected="${c.status == 'REPROVADO'}">Reprovado</option>
-                            <option value="CONTRATADO" th:selected="${c.status == 'CONTRATADO'}">Contratado</option>
+                        <select class="form-select form-select-sm status-select"
+                                th:classappend="'status-' + ${c.status}"
+                                th:attr="data-id=${c.id}">
+                            <option value="EM_ANALISE" th:selected="${c.status.name() == 'EM_ANALISE'}">Em análise</option>
+                            <option value="APROVADO" th:selected="${c.status.name() == 'APROVADO'}">Aprovado</option>
+                            <option value="REPROVADO" th:selected="${c.status.name() == 'REPROVADO'}">Reprovado</option>
+                            <option value="CONTRATADO" th:selected="${c.status.name() == 'CONTRATADO'}">Contratado</option>
                         </select>
                     </td>
                     <td class="text-end">
@@ -126,7 +128,7 @@
         <div class="modal-content">
             <form id="formCandidato">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-pencil-fill me-2"></i>Editar Candidato</h5>
+                    <h5 class="modal-title" id="modalFormTitulo"><i class="bi bi-pencil-fill me-2"></i>Editar Candidato</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">

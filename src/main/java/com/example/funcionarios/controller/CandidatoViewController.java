@@ -11,9 +11,14 @@ import com.example.funcionarios.service.FuncionarioService;
 
 import lombok.RequiredArgsConstructor;
 
+import com.example.funcionarios.service.FuncionarioService;
+
+import lombok.RequiredArgsConstructor;
+
 @Controller
 @RequiredArgsConstructor
 public class CandidatoViewController {
+    private final FuncionarioService funcionarioService;
 
     private final FuncionarioService funcionarioService;
 
