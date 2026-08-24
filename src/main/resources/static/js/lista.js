@@ -8,6 +8,7 @@ const STATUS_LABEL = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btnSalvarCandidato').addEventListener('click', salvarCandidato);
     document.getElementById('formCandidato').addEventListener('submit', salvarCandidato);
     document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
 
